@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { encryptLuaFile, getWggFileName, formatBytes } from "./lib/encryption";
+import { encryptFiles as encryptFilesAPI, formatBytes } from "./lib/utils";
 
 interface EncryptedFile {
   name: string;
@@ -73,23 +73,14 @@ export default function Home() {
     }
   };
 
-  const encryptFiles = async () => {
+  const handleEncrypt = async () => {
     if (files.length === 0) return;
 
     setIsEncrypting(true);
     setStatusText("Encrypting...");
 
     try {
-      const encrypted: EncryptedFile[] = [];
-
-      for (const file of files) {
-        const blob = await encryptLuaFile(file);
-        encrypted.push({
-          name: getWggFileName(file.name),
-          blob,
-          size: blob.size,
-        });
-      }
+      const encrypted = await encryptFilesAPI(files);
 
       setEncryptedFiles(encrypted);
       setView("download");
@@ -251,7 +242,7 @@ export default function Home() {
                   </div>
                   <button
                     className="btn-primary"
-                    onClick={encryptFiles}
+                    onClick={handleEncrypt}
                     disabled={files.length === 0 || isEncrypting}
                   >
                     {isEncrypting ? "Encrypting..." : "Encrypt"}
@@ -361,9 +352,9 @@ export default function Home() {
             <details>
               <summary>How does the encryption work?</summary>
               <p>
-                Your files are encrypted client-side using AES-256-CBC encryption.
-                The encryption happens entirely in your browser - no data is sent to
-                any server.
+                Your files are encrypted server-side using AES-256-CBC encryption.
+                Files are uploaded securely, encrypted, and the encrypted .wgg files
+                are sent back to you.
               </p>
             </details>
             <details>
@@ -373,8 +364,9 @@ export default function Home() {
             <details>
               <summary>Is my data safe?</summary>
               <p>
-                Yes! All encryption happens client-side in your browser. Your files
-                never leave your computer and are not sent to any server.
+                Files are uploaded over HTTPS and encrypted on our server. The
+                encryption key is securely stored on the server and never exposed to
+                clients. Your files are not stored after encryption.
               </p>
             </details>
           </div>

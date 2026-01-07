@@ -4,11 +4,12 @@ This is our encryptor website to encrypt lua files that get loaded from our WGG 
 
 ## Features
 
-- Client-side encryption (files never leave your browser)
+- Server-side AES-256-CBC encryption
+- Secure file upload and download
 - Modern Next.js web application
 - Beautiful UI with Tailwind CSS
 - Drag & drop file support
-- Download encrypted files
+- Multi-file encryption support
 
 ## Getting Started
 
@@ -54,4 +55,8 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 ## Security
 
-All encryption happens client-side in your browser. No files or data are sent to any server.
+- **AES-256-CBC Encryption**: Industry-standard encryption algorithm
+- **Secure Key Storage**: Encryption keys are stored securely on the server, never exposed to clients
+- **HTTPS**: All file uploads are transmitted over HTTPS
+- **No File Storage**: Files are not stored on the server after encryption
+- **Secure API**: Server-side encryption prevents key leakage
